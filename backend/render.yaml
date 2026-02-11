@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: bel-naturels-treasury-api
+    runtime: node
+    plan: free
+    buildCommand: npm install && npx prisma generate && npm run build
+    startCommand: npx prisma migrate deploy && node dist/index.js
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: bel-naturels-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: NODE_ENV
+        value: production
+      - key: FRONTEND_URL
+        value: https://bel-naturels-treasury.vercel.app
+
+databases:
+  - name: bel-naturels-db
+    plan: free
+    databaseName: treasury
